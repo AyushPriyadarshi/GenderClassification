@@ -1,49 +1,44 @@
-
 from sklearn import tree
-from sklearn.svm import SVC
-from sklearn.linear_model import Perceptron
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn import svm
 from sklearn.metrics import accuracy_score
-import numpy as np
+from sklearn import neighbors
+from sklearn.naive_bayes import GaussianNB
 
-# Data and labels
-X = [[181, 80, 44], [177, 70, 43], [160, 60, 38], [154, 54, 37], [166, 65, 40], [190, 90, 47], [175, 64, 39],
-     [177, 70, 40], [159, 55, 37], [171, 75, 42], [181, 85, 43]]
+# data train [height,weight, shoe size]
+X = [[181, 80, 44], [177, 70, 43], [160, 60, 38], [154, 54, 37], [166, 65, 40], [190, 90, 47], [175, 64, 39],[177, 70, 40], [159, 55, 37], [171, 75, 42], [181, 85, 43]]
 
-Y = ['male', 'male', 'female', 'female', 'male', 'male',
-     'female', 'female', 'female', 'male', 'male']
+Y = ['male', 'male', 'female', 'female', 'male', 'male', 'female', 'female', 'female', 'male', 'male']
 
-# Classifiers
-# using the default values for all the hyperparameters
-clf_tree = tree.DecisionTreeClassifier()
-clf_svm = SVC()
-clf_perceptron = Perceptron()
-clf_KNN = KNeighborsClassifier()
+#classifiers
+clf = tree.DecisionTreeClassifier()
+clf1 = svm.SVC()
+clf2 = neighbors.KNeighborsClassifier()
+clf3 = GaussianNB()
+#train model
+clf = clf.fit(X,Y)
+clf1 = clf1.fit(X,Y)
+clf2 = clf2.fit(X,Y)
+clf3 = clf3.fit(X,Y)
 
-# Training the models
-clf_tree.fit(X, Y)
-clf_svm.fit(X, Y)
-clf_perceptron.fit(X, Y)
-clf_KNN.fit(X, Y)
+_X=[[184,84,44],[198,92,48],[183,83,44],[166,47,36],[170,60,38],[172,64,39],[182,80,42],[180,80,43]]
+_Y=['male','male','male','female','female','female','male','male']
 
-# Testing using the same data
-pred_tree = clf_tree.predict(X)
-acc_tree = accuracy_score(Y, pred_tree) * 100
-print('Accuracy for DecisionTree: {}'.format(acc_tree))
+#prediction
+prediction = clf.predict(_X)
+prediction1 = clf1.predict(_X)
+prediction2 = clf2.predict(_X)
+prediction3 = clf3.predict(_X)
 
-pred_svm = clf_svm.predict(X)
-acc_svm = accuracy_score(Y, pred_svm) * 100
-print('Accuracy for SVM: {}'.format(acc_svm))
 
-pred_per = clf_perceptron.predict(X)
-acc_per = accuracy_score(Y, pred_per) * 100
-print('Accuracy for perceptron: {}'.format(acc_per))
+#results 
+r1 = accuracy_score(_Y,prediction1)
+r2 = accuracy_score(_Y,prediction2)
+r3 = accuracy_score(_Y,prediction3)
 
-pred_KNN = clf_KNN.predict(X)
-acc_KNN = accuracy_score(Y, pred_KNN) * 100
-print('Accuracy for KNN: {}'.format(acc_KNN))
-
-# The best classifier from svm, per, KNN
-index = np.argmax([acc_svm, acc_per, acc_KNN])
-classifiers = {0: 'SVM', 1: 'Perceptron', 2: 'KNN'}
-print('Best gender classifier is {}'.format(classifiers[index]))
+#print best result
+if r1 > r2 and r1 > r3:
+	print("SVM : ",r1)
+elif r2 > r3 and r2 > r1:
+	print("KNeighborsClassifier : ",r2)
+else :
+	print("Naive : ",r3)
